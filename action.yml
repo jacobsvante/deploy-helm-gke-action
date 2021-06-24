@@ -1,0 +1,45 @@
+name: Deploy Helm chart to GKE
+author: Jacob Magnusson
+description: >-
+  Configure and deploy a Helm chart to Google Kubernetes Engine,
+  decoding secrets using sops.
+
+inputs:
+  docker-image-repo:
+    description: Docker image repository, e.g. `eu.gcr.io/abc123/my-app`
+    required: true
+  docker-image-tag:
+    description: Docker image tag, e.g. `v0.10.2`. Defaults to using the commit hash
+    required: true
+    default: ${{ github.sha }}
+  helm-release-name:
+    description: Name of the Helm release
+    required: true
+  helm-chart-path:
+    description: Where the Helm chart resides
+    required: true
+  helm-vars-folder:
+    description: >-
+      Folder with Helm variable files.
+      This folder must contain the file values.yaml,
+      and optionally a sops-encrypted file named secrets.yaml.
+    required: true
+    default: helm_vars
+  gke-project:
+    description: The Google Cloud project
+    required: true
+  gke-cluster:
+    description: The name of the Google Cloud Kubernetes cluster
+    required: true
+  gke-zone:
+    description: The zone of the Kubernetes cluster
+    required: true
+  gke-sa-key:
+    description: >-
+      A Google Cloud service account key (JSON-format) which has
+      the required permissions.
+    required: true
+
+runs:
+  using: docker
+  image: Dockerfile
