@@ -3,6 +3,9 @@ author: Jacob Magnusson
 description: >-
   Configure and deploy a Helm chart to Google Kubernetes Engine,
   decoding secrets using sops.
+branding:
+  icon: layers
+  color: blue
 
 inputs:
   docker-image-repo:
