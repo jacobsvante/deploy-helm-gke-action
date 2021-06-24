@@ -1,8 +1,13 @@
 name: Build Docker image
+
 on:
-  push:
-    tags:
-      - v[0-9]+.[0-9]+.[0-9]+
+  release:
+    types: [created]
+  # TODO: Why doesn't this work? It's worked with cargo-chef. Does it have anything to
+  #       do with release-please?
+  # push:
+  #   tags:
+  #     - v[0-9]+.[0-9]+.[0-9]+
 
 env:
   DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -10,7 +15,7 @@ env:
   DOCKER_REPO: ${{ secrets.DOCKERHUB_USERNAME }}/deploy-helm-gke-action
 
 jobs:
-  build_and_push:
+  build-and-push:
     name: Build and push
     runs-on: ubuntu-latest
     steps:
