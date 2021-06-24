@@ -1,0 +1,55 @@
+name: release-please
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  ACTION_NAME: deploy-helm-gke-action
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        uses: GoogleCloudPlatform/release-please-action@v2
+        id: release-pr
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          release-type: simple
+          package-name: ${{ env.ACTION_NAME }}
+          command: release-pr
+      -
+        name: Get PR branch ref
+        uses: actions/github-script@v4
+        if: ${{ steps.release-pr.outputs.pr }}
+        id: pr-data
+        env:
+          PULL_NUMBER: ${{ steps.release-pr.outputs.pr }}
+        with:
+          script: |-
+            const [owner, repo] = process.env.GITHUB_REPOSITORY.split('/');
+            const pr = await github.pulls.get({
+              owner,
+              repo,
+              pull_number: process.env.PULL_NUMBER,
+            });
+            core.setOutput('branchRef', pr.data.head.ref);
+            core.setOutput('version', pr.data.head.ref.replace('release-v', ''));
+      -
+        name: Checkout
+        uses: actions/checkout@v2
+        if: ${{ steps.release-pr.outputs.pr }}
+        with:
+          ref: ${{ steps.pr-data.outputs.branchRef }}
+      -
+        name: Reference versioned Docker Hub image
+        if: ${{ steps.release-pr.outputs.pr }}
+        run: |-
+          VERSION=${{ steps.pr-data.outputs.version }}
+          sed --in-place=.bkp "s|image: Dockerfile|image: docker://$GITHUB_REPOSITORY:v$VERSION|g" action.yml
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git commit -m "chore: Update Docker Hub image reference to ${{ steps.pr-data.outputs.version }}" -- action.yml || true
+          git push || true
