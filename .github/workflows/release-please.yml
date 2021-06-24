@@ -1,0 +1,40 @@
+name: release-please
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  ACTION_NAME: deploy-helm-gke-action
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        uses: GoogleCloudPlatform/release-please-action@v2
+        id: release
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          release-type: simple
+          package-name: ${{ env.ACTION_NAME }}
+      -
+        name: View context attributes
+        uses: actions/github-script@v4
+        with:
+          script: console.log(context)
+      -
+        name: Checkout
+        uses: actions/checkout@v2
+      -
+        name: Reference versioned Docker Hub image
+        if: ${{ steps.release.outputs.pr }}
+        run: |-
+          VERSION=${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }}.${{ steps.release.outputs.patch }}
+          echo "VERSION: ...$VERSION,,, REPO: ...$GITHUB_REPOSITORY,,,"
+          sed --in-place=.bkp "s|image: Dockerfile|image: docker://$GITHUB_REPOSITORY:v$VERSION|g" action.yml
+          git config --local user.name github-actions[bot]
+          git config --local user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git commit -m "chore: Update Docker Hub image reference to $VERSION" -- action.yml
+          git push
