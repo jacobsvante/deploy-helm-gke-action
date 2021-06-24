@@ -1,0 +1,19 @@
+name: release-please
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  ACTION_NAME: deploy-helm-gke-action
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: GoogleCloudPlatform/release-please-action@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          release-type: simple
+          package-name: ${{ env.ACTION_NAME }}

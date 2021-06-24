@@ -45,4 +45,4 @@ inputs:
 
 runs:
   using: docker
-  image: Dockerfile
+  image: "docker://jacobsvante/deploy-helm-gke-action:v1"
