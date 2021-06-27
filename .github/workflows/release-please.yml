@@ -40,14 +40,14 @@ jobs:
         if: ${{ steps.release-pr.outputs.pr }}
         uses: actions/github-script@v4
         env:
-          PR: ${{ steps.release-pr.outputs.pr }}
+          PULL_NUMBER: ${{ steps.release-pr.outputs.pr }}
         with:
           script: |-
             const [owner, repo] = process.env.GITHUB_REPOSITORY.split('/');
             const pr = github.pulls.get({
               owner,
               repo,
-              process.env.PR,
+              pull_number: process.env.PULL_NUMBER,
             });
             console.log(pr);
       -
