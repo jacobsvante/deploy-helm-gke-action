@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.0.2](https://www.github.com/jmagnusson/deploy-helm-gke-action/compare/v1.0.1...v1.0.2) (2021-06-27)
+
+
+### Bug Fixes
+
+* Release please ([d17ff9f](https://www.github.com/jmagnusson/deploy-helm-gke-action/commit/d17ff9fea88bb190a7f8f73e416b20f3b015ef5b))
+
 ### [1.0.1](https://www.github.com/jmagnusson/deploy-helm-gke-action/compare/v1.0.0...v1.0.1) (2021-06-25)
 
 
