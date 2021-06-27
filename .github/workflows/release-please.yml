@@ -14,11 +14,12 @@ jobs:
     steps:
       -
         uses: GoogleCloudPlatform/release-please-action@v2
-        id: release
+        id: release-pr
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           release-type: simple
           package-name: ${{ env.ACTION_NAME }}
+          command: release-pr
       -
         name: View context attributes
         uses: actions/github-script@v4
@@ -27,11 +28,12 @@ jobs:
       -
         name: Checkout
         uses: actions/checkout@v2
+        if: ${{ steps.release-pr.outputs.pr }}
       -
         name: Reference versioned Docker Hub image
-        if: ${{ steps.release.outputs.pr }}
+        if: ${{ steps.release-pr.outputs.pr }}
         run: |-
-          VERSION=${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }}.${{ steps.release.outputs.patch }}
+          VERSION=${{ steps.release-pr.outputs.major }}.${{ steps.release-pr.outputs.minor }}.${{ steps.release-pr.outputs.patch }}
           echo "VERSION: ...$VERSION,,, REPO: ...$GITHUB_REPOSITORY,,,"
           sed --in-place=.bkp "s|image: Dockerfile|image: docker://$GITHUB_REPOSITORY:v$VERSION|g" action.yml
           git config --local user.name github-actions[bot]
