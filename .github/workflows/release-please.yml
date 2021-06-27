@@ -44,7 +44,7 @@ jobs:
         with:
           script: |-
             const [owner, repo] = process.env.GITHUB_REPOSITORY.split('/');
-            const pr = github.pulls.get({
+            const pr = await github.pulls.get({
               owner,
               repo,
               pull_number: process.env.PULL_NUMBER,
