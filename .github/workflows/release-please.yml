@@ -38,5 +38,15 @@ jobs:
           sed --in-place=.bkp "s|image: Dockerfile|image: docker://$GITHUB_REPOSITORY:v$VERSION|g" action.yml
           git config --local user.name github-actions[bot]
           git config --local user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git checkout release-v1.0.2
           git commit -m "chore: Update Docker Hub image reference to $VERSION" -- action.yml
           git push
+      # -
+      #   uses: gr2m/create-or-update-pull-request-action@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     branch: "release-v1.0.2"
+      #     path: "action.yml"
+      #     commit-message: "chore: Update Docker Hub image reference to $VERSION"
+      #     author: "github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
