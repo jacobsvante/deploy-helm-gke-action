@@ -39,13 +39,15 @@ jobs:
         name: Get version
         if: ${{ steps.release-pr.outputs.pr }}
         uses: actions/github-script@v4
+        env:
+          PR: ${{ steps.release-pr.outputs.pr }}
         with:
           script: |-
             const [owner, repo] = process.env.GITHUB_REPOSITORY.split('/');
             const pr = github.pulls.get({
               owner,
               repo,
-              ${{ steps.release-pr.outputs.pr }},
+              process.env.PR,
             });
             console.log(pr);
       -
