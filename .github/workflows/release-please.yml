@@ -29,6 +29,6 @@ jobs:
         run: |-
           VERSION=${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }}.${{ steps.release.outputs.patch }}
           echo "VERSION: ...$VERSION,,, REPO: ...$GITHUB_REPOSITORY,,,"
-          sed -I.bkp "s|image: Dockerfile|image: docker://$GITHUB_REPOSITORY:v$VERSION|g"
+          sed --in-place=.bkp "s|image: Dockerfile|image: docker://$GITHUB_REPOSITORY:v$VERSION|g"
           git commit -m "chore: Update Docker Hub image reference to $VERSION" -- action.yml
           git push
