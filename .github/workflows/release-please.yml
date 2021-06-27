@@ -36,21 +36,22 @@ jobs:
               pull_number: process.env.PULL_NUMBER,
             });
             console.log(pr);
-            console.log(pr.data);
-            console.log(`Got pr: ${pr.data.head.refi}`);
-            return pr.data;
+            const version = pr.data.head.ref.replace('release-v', '');
+            console.log(`Got branchRef from head info: ${pr.data.head}`);
+            console.log(`Got version: ${version}`);
+            core.setOutput('branchRef', pr.data.head.ref);
+            core.setOutput('version', version);
       -
         name: Checkout
         uses: actions/checkout@v2
         if: ${{ steps.release-pr.outputs.pr }}
         with:
-          ref: ${{ steps.pr-data.outputs.result.head.ref }}
+          ref: ${{ steps.pr-data.outputs.branchRef }}
       -
         name: Reference versioned Docker Hub image
         if: ${{ steps.release-pr.outputs.pr }}
         run: |-
-          VERSION=${{ steps.release-pr.outputs.major }}.${{ steps.release-pr.outputs.minor }}.${{ steps.release-pr.outputs.patch }}
-          echo "VERSION: ...$VERSION,,, REPO: ...$GITHUB_REPOSITORY,,,"
+          VERSION=${{ steps.pr-data.outputs.version }}
           sed --in-place=.bkp "s|image: Dockerfile|image: docker://$GITHUB_REPOSITORY:v$VERSION|g" action.yml
       -
         name: Commit new reference
@@ -59,7 +60,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          branch: ${{ steps.pr-data.outputs.result.head.ref }}
+          branch: ${{ steps.pr-data.outputs.branchRef }}
           path: action.yml
-          commit-message: "chore: Update Docker Hub image reference to $VERSION"
+          commit-message: "chore: Update Docker Hub image reference to ${{ steps.pr-data.outputs.version }}"
           author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
