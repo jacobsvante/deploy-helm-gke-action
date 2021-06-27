@@ -20,25 +20,11 @@ jobs:
           release-type: simple
           package-name: ${{ env.ACTION_NAME }}
           command: release-pr
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJSON(github) }}
-        run: echo "$GITHUB_CONTEXT"
       -
-        name: View context attributes
+        name: Get PR branch ref
         uses: actions/github-script@v4
-        with:
-          script: console.log(context)
-      -
-        name: Checkout
-        uses: actions/checkout@v2
         if: ${{ steps.release-pr.outputs.pr }}
-        with:
-          ref: release-v1.0.2
-      -
-        name: Get version
-        if: ${{ steps.release-pr.outputs.pr }}
-        uses: actions/github-script@v4
+        id: pr-data
         env:
           PULL_NUMBER: ${{ steps.release-pr.outputs.pr }}
         with:
@@ -50,6 +36,15 @@ jobs:
               pull_number: process.env.PULL_NUMBER,
             });
             console.log(pr);
+            console.log(pr.data);
+            console.log(`Got pr: ${pr.data.head.refi}`);
+            return pr.data;
+      -
+        name: Checkout
+        uses: actions/checkout@v2
+        if: ${{ steps.release-pr.outputs.pr }}
+        with:
+          ref: ${{ steps.pr-data.outputs.result.head.ref }}
       -
         name: Reference versioned Docker Hub image
         if: ${{ steps.release-pr.outputs.pr }}
@@ -57,16 +52,14 @@ jobs:
           VERSION=${{ steps.release-pr.outputs.major }}.${{ steps.release-pr.outputs.minor }}.${{ steps.release-pr.outputs.patch }}
           echo "VERSION: ...$VERSION,,, REPO: ...$GITHUB_REPOSITORY,,,"
           sed --in-place=.bkp "s|image: Dockerfile|image: docker://$GITHUB_REPOSITORY:v$VERSION|g" action.yml
-          git config --local user.name github-actions[bot]
-          git config --local user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git commit -m "chore: Update Docker Hub image reference to $VERSION" -- action.yml || true
-          git push
-      # -
-      #   uses: gr2m/create-or-update-pull-request-action@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     branch: "release-v1.0.2"
-      #     path: "action.yml"
-      #     commit-message: "chore: Update Docker Hub image reference to $VERSION"
-      #     author: "github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
+      -
+        name: Commit new reference
+        uses: gr2m/create-or-update-pull-request-action@v1
+        if: ${{ steps.release-pr.outputs.pr }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          branch: ${{ steps.pr-data.outputs.result.head.ref }}
+          path: action.yml
+          commit-message: "chore: Update Docker Hub image reference to $VERSION"
+          author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
