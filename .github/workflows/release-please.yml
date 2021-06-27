@@ -25,6 +25,10 @@ jobs:
         with:
           script: console.log(context)
       -
+        name: Checkout
+        uses: actions/checkout@v2
+      -
+        name: Reference versioned Docker Hub image
         if: ${{ steps.release.outputs.pr }}
         run: |-
           VERSION=${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }}.${{ steps.release.outputs.patch }}
