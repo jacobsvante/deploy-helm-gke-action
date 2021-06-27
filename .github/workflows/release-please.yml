@@ -26,9 +26,17 @@ jobs:
           STEPS_CONTEXT: ${{ toJSON(steps) }}
         run: echo "$STEPS_CONTEXT"
       -
+        name: View context attributes
+        uses: actions/github-script@v4
+        if: ${{ steps.release-pr.outputs.pr }}
+        with:
+          script: console.log(context)
+      -
         name: Checkout
         uses: actions/checkout@v2
         if: ${{ steps.release-pr.outputs.pr }}
+        with:
+          ref: release-v1.0.2
       -
         name: Reference versioned Docker Hub image
         if: ${{ steps.release-pr.outputs.pr }}
@@ -38,7 +46,6 @@ jobs:
           sed --in-place=.bkp "s|image: Dockerfile|image: docker://$GITHUB_REPOSITORY:v$VERSION|g" action.yml
           git config --local user.name github-actions[bot]
           git config --local user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git checkout release-v1.0.2
           git commit -m "chore: Update Docker Hub image reference to $VERSION" -- action.yml
           git push
       # -
