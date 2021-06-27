@@ -35,12 +35,8 @@ jobs:
               repo,
               pull_number: process.env.PULL_NUMBER,
             });
-            console.log(pr);
-            const version = pr.data.head.ref.replace('release-v', '');
-            console.log(`Got branchRef from head info: ${pr.data.head}`);
-            console.log(`Got version: ${version}`);
             core.setOutput('branchRef', pr.data.head.ref);
-            core.setOutput('version', version);
+            core.setOutput('version', pr.data.head.ref.replace('release-v', ''));
       -
         name: Checkout
         uses: actions/checkout@v2
