@@ -1,11 +1,18 @@
 name: Deploy Helm chart to GKE
+
 author: Jacob Magnusson
+
 description: >-
   Configure and deploy a Helm chart to Google Kubernetes Engine,
   decoding secrets using sops.
+
 branding:
   icon: layers
   color: blue
+
+runs:
+  using: docker
+  image: Dockerfile
 
 inputs:
   docker-image-repo:
@@ -42,9 +49,3 @@ inputs:
       A Google Cloud service account key (JSON-format) which has
       the required permissions.
     required: true
-
-runs:
-  using: docker
-  image: Dockerfile
-  # TODO: Support pre-built images
-  # image: "docker://jacobsvante/deploy-helm-gke-action:v1"
