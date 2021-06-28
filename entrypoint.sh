@@ -27,6 +27,9 @@ echo "GKE_CLUSTER=$GKE_CLUSTER"
 echo "GKE_ZONE=$GKE_ZONE"
 echo "GKE_SA_KEY=$GKE_SA_KEY"
 
+[[ ! -f "$HELM_CHART_PATH/Chart.yaml" ]] && echo "No Helm chart found at $HELM_CHART_PATH/Chart.yaml" && exit 1
+[[ ! -d "$HELM_VARS_FOLDER" ]] && echo "HELM_VARS_FOLDER=$HELM_VARS_FOLDER doesn't exist" && exit 1
+
 export KUBECONFIG=/kubeconfig.yaml
 
 echo $GKE_SA_KEY \
@@ -34,11 +37,13 @@ echo $GKE_SA_KEY \
     > $KUBECONFIG
 chmod 400 $KUBECONFIG
 
+[[ ! -f "$HELM_VARS_FOLDER/values.yaml" ]] && echo '{}' > $HELM_VARS_FOLDER/values.yaml
+[[ ! -f "$HELM_VARS_FOLDER/secrets.yaml" ]] && echo '{}' > $HELM_VARS_FOLDER/secrets.yaml
+
 echo $GKE_SA_KEY > $HOME/gke-sa-key.json && \
     GOOGLE_APPLICATION_CREDENTIALS=$HOME/gke-sa-key.json \
     sops -d $HELM_VARS_FOLDER/secrets.yaml \
-    > $HELM_VARS_FOLDER/secrets.yaml.dec \
-    || echo '{}' > $HELM_VARS_FOLDER/secrets.yaml.dec
+    > $HELM_VARS_FOLDER/secrets.yaml.dec || true
 
 helm upgrade \
     --atomic \
