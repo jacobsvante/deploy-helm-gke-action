@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0](https://www.github.com/jmagnusson/deploy-helm-gke-action/compare/v1.1.0...v2.0.0) (2021-06-28)
+
+
+### ⚠ BREAKING CHANGES
+
+* Wrong Docker Hub username
+
+### Bug Fixes
+
+* Wrong Docker Hub username ([c5d2db3](https://www.github.com/jmagnusson/deploy-helm-gke-action/commit/c5d2db377fad57a2a19be6b3ac7b438305ea6446))
+
 ## [1.1.0](https://www.github.com/jmagnusson/deploy-helm-gke-action/compare/v1.0.0...v1.1.0) (2021-06-28)
 
 
