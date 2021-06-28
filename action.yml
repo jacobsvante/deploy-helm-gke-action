@@ -12,7 +12,7 @@ branding:
 
 runs:
   using: docker
-  image: Dockerfile
+  image: docker://jmagnusson/deploy-helm-gke-action:9058d43ebe1551d06c84b3dd26b2b68be3182443
 
 inputs:
   docker-image-repo:

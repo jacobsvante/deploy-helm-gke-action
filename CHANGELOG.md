@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.0 (2021-06-28)
+
+
+### Miscellaneous Chores
+
+* release 1.0.0 ([9058d43](https://www.github.com/jmagnusson/deploy-helm-gke-action/commit/9058d43ebe1551d06c84b3dd26b2b68be3182443))
+
 ### [1.0.1](https://www.github.com/jmagnusson/deploy-helm-gke-action/compare/v1.0.0...v1.0.1) (2021-06-25)
 
 
