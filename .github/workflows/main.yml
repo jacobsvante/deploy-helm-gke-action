@@ -70,7 +70,7 @@ jobs:
         name: Reference versioned Docker Hub image
         if: ${{ steps.release-please.outputs.pr }}
         run: |-
-          sed --in-place=.bkp "s|image: Dockerfile|image: docker://$GITHUB_REPOSITORY:${{ github.sha }}|g" action.yml
+          sed --in-place=.bkp -E "s|image\:.+|image: docker://$DOCKER_REPO\:${{ github.sha }}|g" action.yml
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git commit -m "chore: Update Docker Hub image reference to ${{ github.sha }}" -- action.yml || true
