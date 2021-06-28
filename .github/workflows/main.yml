@@ -44,6 +44,7 @@ jobs:
           release-type: simple
           package-name: ${{ env.ACTION_NAME }}
           command: release-pr
+          bump-minor-pre-major: true
       -
         name: Get PR branch ref
         uses: actions/github-script@v4
