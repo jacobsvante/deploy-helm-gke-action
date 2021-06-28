@@ -35,6 +35,12 @@ inputs:
       and optionally a sops-encrypted file named secrets.yaml.
     required: true
     default: helm_vars
+  helm-set:
+    description: Additional helm values to set (corresponds to `helm upgrade --set`). Should have format KEY1=VAL1,KEY2=VAL2.
+    required: false
+  helm-set-string:
+    description: Additional helm string values to set (corresponds to `helm upgrade --set-string`). Should have format KEY1=VAL1,KEY2=VAL2.
+    required: false
   gke-project:
     description: The Google Cloud project
     required: true

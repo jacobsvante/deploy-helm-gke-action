@@ -12,6 +12,8 @@ DOCKER_IMAGE_TAG="$(printenv INPUT_DOCKER-IMAGE-TAG)" || missing_var "INPUT_DOCK
 HELM_RELEASE_NAME="$(printenv INPUT_HELM-RELEASE-NAME)" || missing_var "INPUT_HELM-RELEASE-NAME"
 HELM_CHART_PATH="$(printenv INPUT_HELM-CHART-PATH)" || missing_var "INPUT_HELM-CHART-PATH"
 HELM_VARS_FOLDER="$(printenv INPUT_HELM-VARS-FOLDER)" || missing_var "INPUT_HELM-VARS-FOLDER"
+HELM_SET="$(printenv INPUT_HELM-SET || true)"
+HELM_SET_STRING="$(printenv INPUT_HELM-SET-STRING || true)"
 GKE_PROJECT="$(printenv INPUT_GKE-PROJECT)" || missing_var "INPUT_GKE-PROJECT"
 GKE_CLUSTER="$(printenv INPUT_GKE-CLUSTER)" || missing_var "INPUT_GKE-CLUSTER"
 GKE_ZONE="$(printenv INPUT_GKE-ZONE)" || missing_var "INPUT_GKE-ZONE"
@@ -22,6 +24,8 @@ echo "DOCKER_IMAGE_TAG=$DOCKER_IMAGE_TAG"
 echo "HELM_RELEASE_NAME=$HELM_RELEASE_NAME"
 echo "HELM_CHART_PATH=$HELM_CHART_PATH"
 echo "HELM_VARS_FOLDER=$HELM_VARS_FOLDER"
+echo "HELM_SET=$HELM_SET"
+echo "HELM_SET_STRING=$HELM_SET_STRING"
 echo "GKE_PROJECT=$GKE_PROJECT"
 echo "GKE_CLUSTER=$GKE_CLUSTER"
 echo "GKE_ZONE=$GKE_ZONE"
@@ -52,5 +56,7 @@ helm upgrade \
     --values $HELM_VARS_FOLDER/secrets.yaml.dec \
     --set-string image.repository=$DOCKER_IMAGE_REPO \
     --set-string image.tag=$DOCKER_IMAGE_TAG \
+    --set "$HELM_SET" \
+    --set-string "$HELM_SET_STRING" \
     $HELM_RELEASE_NAME \
     $HELM_CHART_PATH
