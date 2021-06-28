@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.1.2](https://www.github.com/jmagnusson/deploy-helm-gke-action/compare/v1.1.1...v1.1.2) (2021-06-28)
+
+
+### Bug Fixes
+
+* Docker Hub repo wasn't set properly ([b7b891f](https://www.github.com/jmagnusson/deploy-helm-gke-action/commit/b7b891fa07d172dac1a8bdd99a6e315108996eb2))
+
 ### [1.1.1](https://www.github.com/jmagnusson/deploy-helm-gke-action/compare/v1.1.0...v1.1.1) (2021-06-28)
 
 
