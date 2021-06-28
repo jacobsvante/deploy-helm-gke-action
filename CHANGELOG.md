@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.1.0](https://www.github.com/jmagnusson/deploy-helm-gke-action/compare/v1.0.0...v1.1.0) (2021-06-28)
+
+
+### Features
+
+* Add support for helm upgrade --set/--set-string parameters ([7bf54ad](https://www.github.com/jmagnusson/deploy-helm-gke-action/commit/7bf54ad907ad82d24fe914dd4199c0334f395559))
+
+
+### Bug Fixes
+
+* Handle cases where the chart and values files/folders are missing ([ada9320](https://www.github.com/jmagnusson/deploy-helm-gke-action/commit/ada9320cdbcd46af14eff6baf8f4ff909198dda3))
+
 ## 1.0.0 (2021-06-28)
 
 
